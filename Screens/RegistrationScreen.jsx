@@ -1,4 +1,15 @@
-import { StyleSheet, View, ImageBackground, Text, TextInput, TouchableOpacity } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ImageBackground,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import BgImage from '../images/registration-BG.jpg';
 import { useState } from 'react';
 
@@ -6,65 +17,121 @@ const RegistrationScreen = () => {
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [securePass, setSecurePass] = useState(true);
+
+  const [isKeyboardShown, setIsKeyboardShown] = useState(false);
+  const [isUserNameActive, setIsUserNameActive] = useState(false);
+  const [isEmailActive, setIsEmailActive] = useState(false);
+  const [isPassActive, setIsPassActive] = useState(false);
+
   const onPressShowPass = () => {
     setSecurePass(!securePass);
   };
 
+  const changeEmailActiveAndPadding = () => {
+    setIsKeyboardShown(true);
+    setIsEmailActive(true);
+  };
+
+  const changeUserNameActiveAndPadding = () => {
+    setIsKeyboardShown(true);
+    setIsUserNameActive(true);
+  };
+
+  const changePassActiveAndPadding = () => {
+    setIsKeyboardShown(true);
+    setIsPassActive(true);
+  };
+
+  const hideKeyboard = () => {
+    setIsPassActive(false);
+    setIsUserNameActive(false);
+    setIsKeyboardShown(false);
+    Keyboard.dismiss();
+  };
+
   return (
-    <View style={regStyles.container}>
-      <ImageBackground source={BgImage} resizeMode="cover" style={regStyles.bgImg}>
-        <View style={regStyles.formView}>
-          <View style={regStyles.userPhoto}>
-            <View style={regStyles.userPhotoPlus}>
-              <Text style={{ color: '#FF6C00', fontSize: 18 }}>+</Text>
+    <TouchableWithoutFeedback onPress={hideKeyboard}>
+      <View style={regStyles.container}>
+        <ImageBackground source={BgImage} resizeMode="cover" style={regStyles.bgImg}>
+          <View style={{ ...regStyles.formView, paddingBottom: isKeyboardShown ? 184 : 78 }}>
+            <View style={regStyles.userPhoto}>
+              <View style={regStyles.userPhotoPlus}>
+                <Text style={{ color: '#FF6C00', fontSize: 18 }}>+</Text>
+              </View>
             </View>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+              <Text style={regStyles.mainTitle}>Реєстрація</Text>
+              <TextInput
+                id="username"
+                style={{
+                  ...regStyles.inputsAll,
+                  borderColor: isUserNameActive ? '#FF6C00' : '#e8e8e8',
+                  backgroundColor: isUserNameActive ? '#ffffff' : '#f6f6f6',
+                }}
+                onChangeText={setLogin}
+                onFocus={changeUserNameActiveAndPadding}
+                onBlur={() => setIsUserNameActive(false)}
+                value={login}
+                autoComplete="username"
+                placeholder="Логін"
+              />
+              <TextInput
+                id="email"
+                style={{
+                  ...regStyles.inputsAll,
+                  borderColor: isEmailActive ? '#FF6C00' : '#e8e8e8',
+                  backgroundColor: isEmailActive ? '#ffffff' : '#f6f6f6',
+                }}
+                onChangeText={setEmail}
+                onFocus={changeEmailActiveAndPadding}
+                onBlur={() => setIsEmailActive(false)}
+                value={email}
+                autoComplete="email"
+                placeholder="Адреса електронної пошти"
+              />
+
+              <View style={{ position: 'relative' }}>
+                <TextInput
+                  id="passInput"
+                  style={{
+                    ...regStyles.inputsAll,
+                    borderColor: isPassActive ? '#FF6C00' : '#e8e8e8',
+                    backgroundColor: isPassActive ? '#ffffff' : '#f6f6f6',
+                  }}
+                  onChangeText={setPassword}
+                  onFocus={changePassActiveAndPadding}
+                  onBlur={() => setIsPassActive(false)}
+                  value={password}
+                  autoComplete="current-password"
+                  secureTextEntry={securePass}
+                  placeholder="Пароль"
+                />
+                <TouchableOpacity
+                  style={{ position: 'absolute', top: 0, right: 0 }}
+                  onPressIn={onPressShowPass}
+                >
+                  <Text style={regStyles.inputText}>Показати</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                style={regStyles.regButton}
+                accessibilityLabel="Register"
+                onPress={hideKeyboard}
+              >
+                <Text style={regStyles.regButtonText}>Зареєструватися</Text>
+              </TouchableOpacity>
+              <TouchableOpacity accessibilityLabel="LogIn">
+                <Text style={{ color: '#1B4371', textAlign: 'center' }}>
+                  Вже є аккаунт? <Text style={{ textDecorationLine: 'underline' }}>Увійти</Text>
+                </Text>
+              </TouchableOpacity>
+            </KeyboardAvoidingView>
           </View>
-          <Text style={regStyles.mainTitle}>Реєстрація</Text>
-          <TextInput
-            id="username"
-            style={regStyles.inputsAll}
-            onChangeText={setLogin}
-            value={login}
-            autoComplete="username"
-            placeholder="Логін"
-          />
-          <TextInput
-            id="email"
-            style={regStyles.inputsAll}
-            onChangeText={setEmail}
-            value={email}
-            autoComplete="email"
-            placeholder="Адреса електронної пошти"
-          />
-          <View style={{ position: 'relative' }}>
-            <TextInput
-              id="passInput"
-              style={{ ...regStyles.inputsAll, marginBottom: 43 }}
-              onChangeText={setPassword}
-              value={password}
-              autoComplete="current-password"
-              secureTextEntry={securePass}
-              placeholder="Пароль"
-            />
-            <TouchableOpacity
-              style={{ position: 'absolute', top: 0, right: 0 }}
-              onPressIn={onPressShowPass}
-            >
-              <Text style={regStyles.inputText}>Показати</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={regStyles.regButton} accessibilityLabel="Register">
-            <Text style={regStyles.regButtonText}>Зареєструватися</Text>
-          </TouchableOpacity>
-          <TouchableOpacity accessibilityLabel="LogIn">
-            <Text style={{ color: '#1B4371', textAlign: 'center' }}>
-              Вже є аккаунт? <Text style={{ textDecorationLine: 'underline' }}>Увійти</Text>
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
-    </View>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

@@ -9,6 +9,8 @@ import {
   TextInput,
   Image,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import RegistrationScreen from './Screens/RegistrationScreen';
 import LogInScreen from './Screens/LoginScreen';
@@ -37,7 +39,7 @@ export default function App() {
       {/* <View style={myStyles.container}>
          <Text>Hello World! This is my first project in Android Sutdio!</Text>
          <StatusBar style="auto" />
-        
+
       </View> */}
     </>
   );
