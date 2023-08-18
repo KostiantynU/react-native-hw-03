@@ -14,6 +14,20 @@ import BgImage from '../images/registration-BG.jpg';
 import { useState } from 'react';
 
 const LogInScreen = () => {
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardShown(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardShown(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -42,6 +56,13 @@ const LogInScreen = () => {
     setIsLoginActive(false);
     setIsKeyboardShown(false);
     Keyboard.dismiss();
+  };
+
+  const collectInputValues = () => {
+    console.log(`Email: ${email},  and password: ${password}`);
+    hideKeyboard();
+    setEmail('');
+    setPassword('');
   };
 
   return (
@@ -88,7 +109,11 @@ const LogInScreen = () => {
                   <Text style={logStyles.inputText}>Показати</Text>
                 </TouchableOpacity>
               </View>
-              <TouchableOpacity style={logStyles.regButton} accessibilityLabel="Register">
+              <TouchableOpacity
+                style={logStyles.regButton}
+                accessibilityLabel="Register"
+                onPress={collectInputValues}
+              >
                 <Text style={logStyles.regButtonText}>Увійти</Text>
               </TouchableOpacity>
               <TouchableOpacity accessibilityLabel="LogIn">

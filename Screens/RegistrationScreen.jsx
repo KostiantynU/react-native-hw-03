@@ -1,6 +1,7 @@
 import {
   StyleSheet,
   View,
+  Image,
   ImageBackground,
   Text,
   TextInput,
@@ -10,10 +11,37 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SvgXml } from 'react-native-svg';
 import BgImage from '../images/registration-BG.jpg';
-import { useState } from 'react';
+// import AddIcon from '../images/add-icon.png';
+import { useEffect, useState } from 'react';
+
+const addIcon = `
+  <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12.5" cy="12.5" r="12" fill="white" />
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M13 6H12V12H6V13H12V19H13V13H19V12H13V6Z"
+     
+    />
+  </svg>`;
 
 const RegistrationScreen = () => {
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardShown(true);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardShown(false);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
   const [login, setLogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -51,6 +79,14 @@ const RegistrationScreen = () => {
     Keyboard.dismiss();
   };
 
+  const collectInputValues = () => {
+    console.log(`Login: ${login}, email: ${email},  and password: ${password}`);
+    hideKeyboard();
+    setLogin('');
+    setEmail('');
+    setPassword('');
+  };
+
   return (
     <TouchableWithoutFeedback onPress={hideKeyboard}>
       <View style={regStyles.container}>
@@ -58,7 +94,10 @@ const RegistrationScreen = () => {
           <View style={{ ...regStyles.formView, paddingBottom: isKeyboardShown ? 184 : 78 }}>
             <View style={regStyles.userPhoto}>
               <View style={regStyles.userPhotoPlus}>
-                <Text style={{ color: '#FF6C00', fontSize: 18 }}>+</Text>
+                {/* <Text style={{ color: '#FF6C00', fontSize: 18 }}>+</Text> */}
+                {/* <Image source={AddIcon} style={{ width: 25, height: 25 }} /> */}
+                {/* <AddIcon width="25" height="25" /> */}
+                <SvgXml xml={addIcon} width={25} height={25} stroke={'#FF6C00'} fill={'#FF6C00'} />
               </View>
             </View>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -118,7 +157,7 @@ const RegistrationScreen = () => {
               <TouchableOpacity
                 style={regStyles.regButton}
                 accessibilityLabel="Register"
-                onPress={hideKeyboard}
+                onPress={collectInputValues}
               >
                 <Text style={regStyles.regButtonText}>Зареєструватися</Text>
               </TouchableOpacity>
@@ -174,9 +213,9 @@ const regStyles = StyleSheet.create({
     transform: [{ translateY: -20 }],
     justifyContent: 'center',
     alignItems: 'center',
-    borderColor: '#FF6C00',
-    borderRadius: 50,
-    borderWidth: 1,
+    // borderColor: '#FF6C00',
+    // borderRadius: 50,
+    // borderWidth: 1,
   },
   mainTitle: { fontSize: 30, textAlign: 'center', color: '#212121', marginBottom: 33 },
   inputsAll: {
