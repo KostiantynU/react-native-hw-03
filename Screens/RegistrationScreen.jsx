@@ -97,7 +97,7 @@ const RegistrationScreen = () => {
                 {/* <Text style={{ color: '#FF6C00', fontSize: 18 }}>+</Text> */}
                 {/* <Image source={AddIcon} style={{ width: 25, height: 25 }} /> */}
                 {/* <AddIcon width="25" height="25" /> */}
-                <SvgXml xml={addIcon} width={25} height={25} stroke={'#FF6C00'} fill={'#FF6C00'} />
+                <SvgXml xml={addIcon} width={25} height={25} stroke={'#FF6C00'} />
               </View>
             </View>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
